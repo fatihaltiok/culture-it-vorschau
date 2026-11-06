@@ -3,5 +3,6 @@
 Entwurf für eine neue Webseite von Culture IT, nur zur Ansicht. Keine offizielle Seite; für Suchmaschinen gesperrt.
 
 - `entwurf-1/` — erster Entwurf
+- `runde-2/` — zehn Startseiten-Entwürfe mit Übersichtsseite (November 2026)
 
 Dieses Repo enthält ausschließlich die fertige, statische Seite.

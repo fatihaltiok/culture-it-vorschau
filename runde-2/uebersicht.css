@@ -1,0 +1,76 @@
+/* Übersicht der zehn Entwürfe. Neutral: Papier, Tinte, eine Akzentfarbe (Mint) nur für den Fokus. */
+:root {
+  --papier: #F3EEE4;
+  --karte: #FBF8F2;
+  --tinte: #1E2320;
+  --grau: #484848;
+  --linie: #D9D2C3;
+  --akzent: #8FC46C;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--papier);
+  color: var(--tinte);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.5;
+}
+.kopf, main, .fuss { max-width: 1280px; margin: 0 auto; padding-left: 24px; padding-right: 24px; }
+.kopf { padding-top: 40px; padding-bottom: 32px; }
+.logo { display: block; width: 219px; max-width: 100%; height: auto; margin-bottom: 32px; }
+h1 {
+  margin: 0 0 12px;
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+  font-weight: 400;
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+.lead { margin: 0 0 8px; max-width: 60ch; font-size: 1.125rem; }
+.stand { margin: 0; color: var(--grau); font-size: 0.875rem; }
+
+.raster { list-style: none; margin: 0; padding: 0 24px 0 24px; display: grid; grid-template-columns: 1fr; gap: 24px; }
+main { padding-left: 0; padding-right: 0; }
+@media (min-width: 1100px) { .raster { grid-template-columns: 1fr 1fr; gap: 32px; } }
+
+.kachel {
+  display: block;
+  height: 100%;
+  padding: 16px;
+  background: var(--karte);
+  border: 1px solid var(--linie);
+  border-radius: 6px;
+  color: inherit;
+  text-decoration: none;
+  transition: border-color .2s;
+}
+.kachel:hover { border-color: var(--tinte); }
+.kachel:focus-visible { outline: 3px solid var(--tinte); outline-offset: 3px; box-shadow: 0 0 0 6px var(--akzent); }
+
+.bilder { position: relative; display: block; padding-bottom: 28px; padding-right: 16%; }
+.gross { display: block; width: 100%; height: auto; border: 1px solid var(--linie); background: var(--papier); }
+.handy {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 26%;
+  height: auto;
+  border: 4px solid var(--tinte);
+  border-radius: 14px;
+  background: var(--tinte);
+}
+.name { display: block; margin-top: 8px; font-size: 1.25rem; font-weight: 600; }
+.nr { font-variant-numeric: tabular-nums; }
+.satz { display: block; margin-top: 4px; max-width: 62ch; color: var(--grau); font-size: 0.9375rem; }
+
+.fuss { padding-top: 40px; padding-bottom: 40px; color: var(--grau); font-size: 0.875rem; }
+.fuss p { margin: 0; }
+
+@media (max-width: 520px) {
+  .kopf { padding-left: 16px; padding-right: 16px; }
+  .raster { padding-left: 16px; padding-right: 16px; }
+  .fuss { padding-left: 16px; padding-right: 16px; }
+  .kachel { padding: 12px; }
+}
+@media (prefers-reduced-motion: reduce) { .kachel { transition: none; } }
