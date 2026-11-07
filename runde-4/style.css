@@ -473,6 +473,24 @@ h2[data-marker]::after {
   .has-js h2[data-marker].ist-gezeichnet::after { transform: scaleX(1); transition: transform 0.8s var(--lauf) 0.15s; }
 }
 
+/* Handy (< 768 px): Workshop-Karten gleiten einmal seitlich herein (links/rechts abwechselnd, kurzes Stück, sanft auslaufend).
+   Eigene Eigenschaft translate, damit das Anheben (transform) unberührt bleibt. Klasse .fliegt-an setzt main.js nur mit JS,
+   .ist-eingeflogen beim Erscheinen. Marker unter dem h2 ist hier sofort voll (die Karten sind die eine Bewegung). */
+@media (max-width: 47.99rem) {
+  #workshops { overflow-x: clip; }
+  .has-js #workshops h2[data-marker]::after { transform: none; transition: none; }
+}
+@media (max-width: 47.99rem) and (prefers-reduced-motion: no-preference) {
+  .has-js .karten > .karte.fliegt-an {
+    translate: -2.5rem 0; opacity: 0;
+    transition: transform 0.35s var(--lauf), box-shadow 0.35s var(--lauf),
+      translate 0.7s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease-out;
+  }
+  .has-js .karten > .karte.fliegt-an:nth-of-type(even) { translate: 2.5rem 0; }
+  .has-js .karten > .karte.fliegt-an.ist-eingeflogen,
+  .has-js .karten > .karte.fliegt-an:focus-within { translate: 0 0; opacity: 1; }
+}
+
 /* Ruhe: ohne Bewegung alles sofort fertig */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }

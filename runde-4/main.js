@@ -46,6 +46,17 @@
     ueberschriften.forEach(h => h.classList.add('ist-gezeichnet'));
   }
 
+  /* Workshop-Karten (Handy, < 768 px): gleiten einmal herein; CSS gated Breite und reduzierte Bewegung, ohne IO bleibt alles sichtbar */
+  const karten = document.querySelectorAll('#workshops .karten > .karte');
+  if ('IntersectionObserver' in window && karten.length) {
+    const flug = new IntersectionObserver((eintraege) => {
+      eintraege.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('ist-eingeflogen'); flug.unobserve(e.target); }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0 });
+    karten.forEach(k => { k.classList.add('fliegt-an'); flug.observe(k); });
+  }
+
   /* Zertifikate: alle Gruppen auf einmal öffnen */
   const zahl = document.querySelector('.zert-zahl');
   const gruppen = document.querySelectorAll('.note-mehr');
