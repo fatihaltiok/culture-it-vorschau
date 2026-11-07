@@ -36,6 +36,11 @@
   --rand: clamp(1.25rem, 5vw, 4rem);
   --breite: 1200px;
   --kopf: 4.5rem;
+  /* Tiefe: Licht von oben, Schatten bläulich aus --text/--dunkel, mehrlagig */
+  --schatten: 0 1px 2px rgb(16 32 44 / 0.06), 0 4px 10px -2px rgb(16 32 44 / 0.08), 0 14px 28px -10px rgb(15 53 82 / 0.18);
+  --schatten-hoch: 0 2px 4px rgb(16 32 44 / 0.06), 0 10px 20px -4px rgb(16 32 44 / 0.12), 0 26px 44px -14px rgb(15 53 82 / 0.28);
+  --lauf: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dunkel-hell: color-mix(in srgb, var(--dunkel) 72%, var(--leit));
   --kenn: var(--leit);
   --schrift-kopf: "Bricolage Grotesque", system-ui, sans-serif;
   --schrift-text: "Figtree", system-ui, sans-serif;
@@ -64,7 +69,7 @@ img { display: block; max-width: 100%; height: auto; }
 h1, h2, h3, h4 { font-family: var(--schrift-kopf); font-weight: 700; line-height: 1.1; margin: 0; letter-spacing: -0.015em; text-wrap: balance; }
 p, ul, ol, figure, blockquote { margin: 0; }
 [hidden] { display: none !important; }
-a { color: var(--leit); text-underline-offset: 0.2em; text-decoration-thickness: 0.08em; }
+a { color: var(--leit); text-underline-offset: 0.2em; text-decoration-thickness: 0.08em; transition: color 0.2s ease; }
 a:hover { color: var(--text); }
 section[id], [id].ws { scroll-margin-top: var(--kopf); }
 
@@ -84,6 +89,9 @@ section[id], [id].ws { scroll-margin-top: var(--kopf); }
 .dicht { padding-block: clamp(2.25rem, 4vw, 3.5rem); }
 .flaeche { background: var(--flaeche); }
 .dunkel { background: var(--dunkel); color: var(--grund); }
+/* ruhiger Verlauf aus zwei Werten (--dunkel, Stufe von --leit); Farbe bleibt als Rückfall */
+.zertifikate.dunkel { background-image: linear-gradient(160deg, var(--dunkel) 0%, var(--dunkel-hell) 100%); }
+.kontakt.dunkel { background-image: linear-gradient(180deg, var(--dunkel-hell) 0%, var(--dunkel) 100%); }
 .dunkel a { color: var(--grund); }
 .dunkel a:hover { color: #fff; }
 
@@ -98,6 +106,7 @@ h3 { font-size: clamp(1.25rem, 1.8vw, 1.5rem); line-height: 1.2; }
   min-height: 3.25rem; padding: 0.7rem 1.5rem;
   font: 600 1.0625rem/1.2 var(--schrift-text);
   text-decoration: none; border: 2px solid transparent; border-radius: 0.25rem; cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 .knopf-akzent { background: var(--akzent); color: #fff; }
 .knopf-akzent:hover { background: var(--text); color: #fff; }
@@ -109,6 +118,13 @@ h3 { font-size: clamp(1.25rem, 1.8vw, 1.5rem); line-height: 1.2; }
 .knopf-hell:hover { background: var(--grund); color: var(--dunkel); }
 .text-link { display: inline-flex; align-items: center; gap: 0.35rem; min-height: 2.75rem; font-weight: 600; }
 p .text-link { min-height: 0; }
+.knopf span[aria-hidden], .text-link span[aria-hidden], .anfrage span[aria-hidden] { display: inline-block; transition: transform 0.25s var(--lauf); }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .knopf:hover span[aria-hidden], .text-link:hover span[aria-hidden], .anfrage:hover span[aria-hidden] { transform: translate(3px, -3px); }
+  .alle .knopf:hover span[aria-hidden] { transform: translateX(4px); }
+}
+.knopf:focus-visible span[aria-hidden], .text-link:focus-visible span[aria-hidden], .anfrage:focus-visible span[aria-hidden] { transform: translate(3px, -3px); }
+.alle .knopf:focus-visible span[aria-hidden] { transform: translateX(4px); }
 
 /* Randzeichen (eigene SVG, nie Pflichtinformation, nie über Text) */
 .rz { display: block; color: var(--leit); pointer-events: none; }
@@ -120,6 +136,13 @@ p .text-link { min-height: 0; }
   display: flex; align-items: center; gap: 0.75rem;
   padding-inline: max(var(--rand), calc((100% - var(--breite)) / 2));
   background: var(--grund); border-bottom: 1px solid var(--linie);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+/* gescrollt (main.js setzt die Klasse): feiner Schatten, leicht durchscheinend */
+.kopf.ist-gescrollt {
+  background: rgb(237 243 246 / 0.9); border-bottom-color: transparent;
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  box-shadow: 0 1px 2px rgb(16 32 44 / 0.06), 0 8px 20px -8px rgb(15 53 82 / 0.22);
 }
 .marke { display: flex; align-items: center; min-height: 2.75rem; padding-block: 0.25rem; margin-right: auto; }
 .marke img { height: 1.8rem; width: auto; }
@@ -128,6 +151,7 @@ p .text-link { min-height: 0; }
   order: 2; display: inline-flex; align-items: center; gap: 0.3rem; min-height: 2.75rem; padding: 0.4rem 0.8rem;
   background: var(--akzent); color: #fff; font-weight: 600; text-decoration: none; border-radius: 0.25rem; font-size: 1rem;
 }
+.anfrage { transition: background-color 0.2s ease, color 0.2s ease; }
 .anfrage:hover { background: var(--text); color: #fff; }
 .menue-knopf {
   order: 3; display: none; min-height: 2.75rem; padding: 0.4rem 0.7rem;
@@ -177,6 +201,7 @@ h1 { font-size: clamp(2.25rem, 5.6vw, 4.25rem); line-height: 1.06; letter-spacin
 .video {
   position: relative; background: var(--dunkel); color: var(--grund); aspect-ratio: 16 / 9; width: 100%;
   display: grid; place-items: center; align-content: center; gap: 1.25rem; padding: 1.5rem; border-radius: 0.375rem;
+  background-image: linear-gradient(145deg, var(--dunkel) 0%, var(--dunkel-hell) 100%); box-shadow: var(--schatten-hoch);
 }
 .video-punkte { display: flex; gap: 0.875rem; }
 .video-punkte span { width: 1.125rem; height: 1.125rem; border-radius: 50%; background: var(--kenn); }
@@ -198,7 +223,7 @@ h1 { font-size: clamp(2.25rem, 5.6vw, 4.25rem); line-height: 1.06; letter-spacin
 .rz-stern { position: absolute; right: 0; top: 0; width: 2.75rem; height: auto; color: var(--leit); }
 .formate { display: grid; gap: 1.5rem; margin-top: clamp(1.5rem, 3vw, 2.25rem); }
 .format { display: flex; flex-direction: column; gap: 0.5rem; }
-.rahmen { border: 1px solid var(--linie); background: #fff; padding: 0.5rem; }
+.rahmen { border: 1px solid var(--linie); background: #fff; padding: 0.5rem; box-shadow: var(--schatten); }
 .rahmen img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
 .ki-hinweis { align-self: flex-start; font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.02em; color: var(--text); }
 .ki-hinweis::before { content: ""; display: inline-block; width: 0.5rem; height: 0.5rem; margin-right: 0.45rem; background: var(--akzent); border-radius: 50%; }
@@ -212,14 +237,15 @@ h1 { font-size: clamp(2.25rem, 5.6vw, 4.25rem); line-height: 1.06; letter-spacin
 .karte {
   background: #fff; border-top: 0.5rem solid var(--kenn);
   padding: 1.5rem 1.5rem 1.25rem; display: flex; flex-direction: column; align-items: flex-start; gap: 0.75rem;
+  box-shadow: var(--schatten); transition: transform 0.35s var(--lauf), box-shadow 0.35s var(--lauf);
 }
 .karte-nr { font-family: var(--schrift-kopf); font-weight: 800; font-size: 2.25rem; line-height: 1; color: var(--leit); }
 .dauer, .ws-dauer { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; }
 .punkt { width: 0.875rem; height: 0.875rem; border-radius: 50%; background: var(--kenn); outline: 2px solid var(--dunkel); outline-offset: 1px; flex: none; }
 .karte-text { max-width: 52ch; }
 .karte .text-link { margin-top: auto; }
-.karte-lego { width: 100%; }
-.karte-lego img { width: 100%; height: auto; }
+.karte-lego { width: 100%; overflow: hidden; }
+.karte-lego img { width: 100%; height: auto; transition: transform 0.6s var(--lauf); }
 @media (min-width: 48rem) {
   .karten { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .karte-breit { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 17rem); column-gap: 2.5rem; align-content: start; justify-items: start; }
@@ -238,7 +264,9 @@ h1 { font-size: clamp(2.25rem, 5.6vw, 4.25rem); line-height: 1.06; letter-spacin
 
 /* Über Don */
 .ueber-raster { display: grid; gap: clamp(2rem, 5vw, 4rem); }
-.portrait { max-width: 22rem; }
+.portrait { position: relative; isolation: isolate; max-width: 22rem; }
+/* Schatten auf eigener Ebene, damit der Graustufenfilter ihn nicht entfärbt */
+.portrait::before { content: ""; position: absolute; z-index: -1; left: 0; top: 0; width: 100%; aspect-ratio: 2 / 3; box-shadow: var(--schatten-hoch); }
 .portrait img { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; filter: grayscale(1); }
 .portrait figcaption { margin-top: 0.5rem; font-size: 1rem; color: var(--leit); font-weight: 600; }
 .ueber-inhalt h2 { margin-bottom: 1.75rem; }
@@ -259,7 +287,7 @@ h1 { font-size: clamp(2.25rem, 5.6vw, 4.25rem); line-height: 1.06; letter-spacin
 .gross-zahl span { display: block; font-size: clamp(7rem, 20vw, 13rem); font-weight: 800; line-height: 0.9; letter-spacing: -0.04em; margin-bottom: 0.25rem; }
 .rz-welle { width: 9rem; height: auto; margin-block: 0.25rem 1rem; }
 .notizen { display: grid; gap: 1.25rem; justify-items: start; }
-.note { position: relative; align-self: start; box-shadow: 0 0.6rem 1.2rem -0.5rem rgb(16 32 44 / 0.55); color: var(--text); }
+.note { position: relative; align-self: start; color: var(--text); box-shadow: 0 1px 2px rgb(15 53 82 / 0.3), 0 6px 12px -4px rgb(15 53 82 / 0.38); transition: transform 0.35s var(--lauf), box-shadow 0.35s var(--lauf); }
 /* Haftnotiz: Farbe auf der Notiz selbst, nie breiter als 480 px (§V3.3) */
 .note { background: var(--kenn); padding: 0 1.25rem 1rem; width: 100%; max-width: 480px; }
 .note::before { content: ""; position: absolute; z-index: 1; left: 50%; top: -0.55rem; width: 4.5rem; height: 1.1rem; margin-left: -2.25rem; background: rgb(237 243 246 / 0.6); }
@@ -367,11 +395,12 @@ h1 { font-size: clamp(2.25rem, 5.6vw, 4.25rem); line-height: 1.06; letter-spacin
 
 .sprung { padding-block: clamp(2.5rem, 5vw, 4rem); }
 .sprung ol { list-style: none; padding: 0; display: grid; gap: 0.875rem; }
-.sprung li { background: #fff; border-top: 0.5rem solid var(--kenn); }
+.sprung li { background: #fff; border-top: 0.5rem solid var(--kenn); box-shadow: var(--schatten); transition: transform 0.35s var(--lauf), box-shadow 0.35s var(--lauf); }
 .sprung a {
   display: grid; grid-template-columns: 2.25rem 1fr; column-gap: 0.75rem; row-gap: 0.15rem; align-items: start; align-content: start;
   height: 100%; min-height: 3.5rem; padding: 0.9rem 1rem; text-decoration: none; color: var(--text);
 }
+.sprung a { transition: background-color 0.2s ease; }
 .sprung a:hover { background: var(--grund); }
 .sprung-nr { font-family: var(--schrift-kopf); font-weight: 800; font-size: 1.5rem; line-height: 1.2; color: var(--leit); grid-row: span 2; }
 .sprung-titel { font-family: var(--schrift-kopf); font-weight: 700; font-size: 1.1875rem; line-height: 1.2; }
@@ -411,6 +440,38 @@ h1 { font-size: clamp(2.25rem, 5.6vw, 4.25rem); line-height: 1.06; letter-spacin
 }
 .weitere-wrap { padding-block: clamp(2.5rem, 5vw, 4rem); }
 .weitere-wrap .weitere { margin-top: 0; }
+
+/* Anheben beim Überfahren/Fokus (Zweck: zeigt „anklickbar“); nur Zeiger mit Hover bzw. Tastaturfokus */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .karte:hover, .sprung li:hover { transform: translateY(-4px); box-shadow: var(--schatten-hoch); }
+  .note:hover { transform: translateY(-6px); }
+  .karte:hover .karte-lego img { transform: scale(1.04); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .karte:focus-within, .sprung li:focus-within { transform: translateY(-4px); box-shadow: var(--schatten-hoch); }
+  .note:focus-within { transform: translateY(-6px); }
+  .karte:focus-within .karte-lego img { transform: scale(1.04); }
+}
+.note:focus-within { box-shadow: 0 2px 4px rgb(15 53 82 / 0.3), 0 16px 26px -6px rgb(15 53 82 / 0.5); }
+@media (hover: hover) { .note:hover { box-shadow: 0 2px 4px rgb(15 53 82 / 0.3), 0 16px 26px -6px rgb(15 53 82 / 0.5); } }
+
+/* Marker-Strich unter den Abschnittsüberschriften: gleiches Motiv wie im h1, zeichnet einmal beim Erscheinen */
+h2[data-marker]::after {
+  content: ""; display: block; width: 4.5rem; height: 0.5rem; margin-top: 0.75rem;
+  background: var(--mk, var(--kenn)); transform-origin: left center;
+}
+#workshops, #zertifikate, #shop { --mk: var(--mint); }
+#ueber { --mk: var(--gelb); }
+#mentoring { --mk: var(--orange); }
+#stimmen { --mk: var(--rosa); }
+#blog { --mk: var(--hellblau); }
+/* kleine Überschrift (Stimmen): Strich im Verhältnis zur Schrift */
+.stimmen h2[data-marker]::after { width: 2.25em; height: 0.2em; margin-top: 0.5em; }
+.stimmen h2[data-marker]::after { margin-inline: auto; transform-origin: center; }
+@media (prefers-reduced-motion: no-preference) {
+  .has-js h2[data-marker]::after { transform: scaleX(0); }
+  .has-js h2[data-marker].ist-gezeichnet::after { transform: scaleX(1); transition: transform 0.8s var(--lauf) 0.15s; }
+}
 
 /* Ruhe: ohne Bewegung alles sofort fertig */
 @media (prefers-reduced-motion: reduce) {
