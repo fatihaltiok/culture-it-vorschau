@@ -37,8 +37,16 @@
   --breite: 1200px;
   --kopf: 4.5rem;
   /* Tiefe: Licht von oben, Schatten bläulich aus --text/--dunkel, mehrlagig */
-  --schatten: 0 1px 2px rgb(16 32 44 / 0.06), 0 4px 10px -2px rgb(16 32 44 / 0.08), 0 14px 28px -10px rgb(15 53 82 / 0.18);
-  --schatten-hoch: 0 2px 4px rgb(16 32 44 / 0.06), 0 10px 20px -4px rgb(16 32 44 / 0.12), 0 26px 44px -14px rgb(15 53 82 / 0.28);
+  /* Ein Licht für die ganze Seite: es kommt von oben links. Lichtkante oben (inset), Schatten nach unten rechts, mehrlagig, bläulich */
+  --lichtkante: inset 0 1px 0 rgb(255 255 255 / 0.85);
+  --lichtkante-dunkel: inset 0 1px 0 rgb(255 255 255 / 0.3);
+  --schatten-flach: 1px 1px 2px rgb(16 32 44 / 0.1), 2px 4px 8px -2px rgb(16 32 44 / 0.14);
+  --schatten: 1px 2px 3px rgb(16 32 44 / 0.07), 4px 8px 14px -4px rgb(16 32 44 / 0.12), 12px 22px 34px -14px rgb(15 53 82 / 0.24), var(--lichtkante);
+  --schatten-hoch: 2px 3px 5px rgb(16 32 44 / 0.08), 8px 14px 22px -6px rgb(16 32 44 / 0.16), 20px 34px 50px -16px rgb(15 53 82 / 0.34), var(--lichtkante);
+  --schatten-tief: 2px 4px 6px rgb(16 32 44 / 0.1), 10px 18px 26px -8px rgb(16 32 44 / 0.2), 28px 46px 64px -20px rgb(15 53 82 / 0.5), var(--lichtkante-dunkel);
+  --schatten-notiz: 2px 3px 4px rgb(15 53 82 / 0.28), 8px 12px 14px -6px rgb(15 53 82 / 0.4), 14px 22px 22px -12px rgb(15 53 82 / 0.5), var(--lichtkante);
+  --schatten-notiz-hoch: 3px 4px 6px rgb(15 53 82 / 0.3), 12px 18px 20px -6px rgb(15 53 82 / 0.5), 20px 32px 30px -12px rgb(15 53 82 / 0.55), var(--lichtkante);
+  --flaeche-weich: linear-gradient(135deg, #fff 0%, var(--grund) 100%);
   --lauf: cubic-bezier(0.2, 0.7, 0.2, 1);
   --dunkel-hell: color-mix(in srgb, var(--dunkel) 72%, var(--leit));
   --kenn: var(--leit);
@@ -106,15 +114,17 @@ h3 { font-size: clamp(1.25rem, 1.8vw, 1.5rem); line-height: 1.2; }
   min-height: 3.25rem; padding: 0.7rem 1.5rem;
   font: 600 1.0625rem/1.2 var(--schrift-text);
   text-decoration: none; border: 2px solid transparent; border-radius: 0.25rem; cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  box-shadow: 1px 2px 3px rgb(16 32 44 / 0.16), 3px 7px 12px -4px rgb(16 32 44 / 0.28), inset 0 1px 0 rgb(255 255 255 / 0.32);
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.12s ease, box-shadow 0.12s ease;
 }
+.knopf:active, .anfrage:active { transform: translateY(1.5px); box-shadow: 0 1px 1px rgb(16 32 44 / 0.2), inset 0 1px 0 rgb(255 255 255 / 0.2); }
 .knopf-akzent { background: var(--akzent); color: #fff; }
 .knopf-akzent:hover { background: var(--text); color: #fff; }
-.knopf-ruhig { border-color: var(--leit); color: var(--leit); background: transparent; }
+.knopf-ruhig { border-color: var(--leit); color: var(--leit); background: rgb(255 255 255 / 0.55); box-shadow: 1px 2px 3px rgb(16 32 44 / 0.1), 3px 7px 12px -4px rgb(16 32 44 / 0.2), inset 0 1px 0 rgb(255 255 255 / 0.9); }
 .knopf-ruhig:hover { background: var(--leit); color: #fff; }
 .knopf-leit { background: var(--leit); color: #fff; }
 .knopf-leit:hover { background: var(--dunkel); color: #fff; }
-.knopf-hell { border-color: var(--grund); color: var(--grund); background: transparent; }
+.knopf-hell { border-color: var(--grund); color: var(--grund); background: transparent; box-shadow: 1px 2px 3px rgb(16 32 44 / 0.35), 3px 7px 12px -4px rgb(16 32 44 / 0.5), inset 0 1px 0 rgb(255 255 255 / 0.3); }
 .knopf-hell:hover { background: var(--grund); color: var(--dunkel); }
 .text-link { display: inline-flex; align-items: center; gap: 0.35rem; min-height: 2.75rem; font-weight: 600; }
 p .text-link { min-height: 0; }
@@ -150,8 +160,9 @@ p .text-link { min-height: 0; }
 .anfrage {
   order: 2; display: inline-flex; align-items: center; gap: 0.3rem; min-height: 2.75rem; padding: 0.4rem 0.8rem;
   background: var(--akzent); color: #fff; font-weight: 600; text-decoration: none; border-radius: 0.25rem; font-size: 1rem;
+  box-shadow: 1px 2px 3px rgb(16 32 44 / 0.16), 3px 7px 12px -4px rgb(16 32 44 / 0.28), inset 0 1px 0 rgb(255 255 255 / 0.32);
 }
-.anfrage { transition: background-color 0.2s ease, color 0.2s ease; }
+.anfrage { transition: background-color 0.2s ease, color 0.2s ease, transform 0.12s ease, box-shadow 0.12s ease; }
 .anfrage:hover { background: var(--text); color: #fff; }
 .menue-knopf {
   order: 3; display: none; min-height: 2.75rem; padding: 0.4rem 0.7rem;
@@ -181,7 +192,14 @@ p .text-link { min-height: 0; }
 }
 
 /* Einstieg */
-.hero { position: relative; padding: clamp(2.5rem, 5vw, 3.5rem) var(--rand) clamp(2.5rem, 5vw, 3.5rem); display: grid; gap: clamp(2rem, 5vw, 3rem); overflow: clip; }
+.hero { position: relative; isolation: isolate; padding: clamp(2.5rem, 5vw, 3.5rem) var(--rand) clamp(2.5rem, 5vw, 3.5rem); display: grid; gap: clamp(2rem, 5vw, 3rem); overflow-x: clip; }
+
+/* Prägungen: Gecko als Relief, statisch, liegen unter Text und Knöpfen (z-index -1 im eigenen Abschnitt), fassen nichts an */
+.praegung { position: absolute; z-index: -1; display: block; max-width: none; pointer-events: none; user-select: none; }
+.praegung-hero { height: 78%; width: auto; right: -28%; top: 4%; }
+.zertifikate, .kontakt { position: relative; }
+.zertifikate { isolation: isolate; overflow: clip; }
+.praegung-zert { height: min(78%, 46rem); width: auto; left: -22%; top: 9%; }
 .hero-text { position: relative; max-width: 42rem; }
 h1 { font-size: clamp(2.25rem, 5.6vw, 4.25rem); line-height: 1.06; letter-spacing: -0.025em; font-weight: 800; }
 .marker { position: relative; display: inline-block; white-space: nowrap; isolation: isolate; }
@@ -198,22 +216,24 @@ h1 { font-size: clamp(2.25rem, 5.6vw, 4.25rem); line-height: 1.06; letter-spacin
 .hero-links { display: flex; flex-wrap: wrap; align-items: center; gap: 0.875rem; margin-top: 2rem; }
 .rz-pfeil { display: none; }
 
+/* Videofeld: Standbild des Einstiegs auf Dunkelfläche, Höhe an die Fensterhöhe gekoppelt; liegt wie ein Foto auf dem Tisch */
 .video {
-  position: relative; background: var(--dunkel); color: var(--grund); aspect-ratio: 16 / 9; width: 100%;
-  display: grid; place-items: center; align-content: center; gap: 1.25rem; padding: 1.5rem; border-radius: 0.375rem;
-  background-image: linear-gradient(145deg, var(--dunkel) 0%, var(--dunkel-hell) 100%); box-shadow: var(--schatten-hoch);
+  position: relative; z-index: 2; overflow: hidden; background: var(--dunkel); color: var(--grund); width: 100%;
+  height: clamp(18rem, 48vh, 32rem); border-radius: 0.375rem;
+  background-image: linear-gradient(145deg, var(--dunkel) 0%, var(--dunkel-hell) 100%); box-shadow: var(--schatten-tief);
 }
-.video-punkte { display: flex; gap: 0.875rem; }
-.video-punkte span { width: 1.125rem; height: 1.125rem; border-radius: 50%; background: var(--kenn); }
-.p-mint { --kenn: var(--mint); } .p-gelb { --kenn: var(--gelb); } .p-orange { --kenn: var(--orange); } .p-rosa { --kenn: var(--rosa); }
-.video-schild { font-family: var(--schrift-kopf); font-weight: 500; font-size: clamp(1.0625rem, 2vw, 1.5rem); text-align: center; line-height: 1.3; max-width: 22ch; }
+.video img { width: 100%; height: 100%; object-fit: cover; }
+.video::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.4), inset 0 0 0 1px rgb(255 255 255 / 0.1); }
+.video .ki-hinweis { position: absolute; z-index: 1; left: 0.75rem; bottom: 0.75rem; padding: 0.3rem 0.65rem; background: var(--grund); color: var(--text); border-radius: 0.2rem; box-shadow: var(--schatten-flach); }
 
 @media (min-width: 62rem) {
   .hero {
     grid-template-columns: minmax(0, 11fr) minmax(0, 12fr); align-items: center; gap: clamp(2rem, 4vw, 4rem);
     padding-left: max(var(--rand), calc((100% - var(--breite)) / 2)); padding-right: 0;
   }
-  .video { border-radius: 0.375rem 0 0 0.375rem; }
+  .video { border-radius: 0.375rem 0 0 0.375rem; align-self: end; margin-bottom: -5.5rem; }
+  .praegung-hero { height: 86%; right: auto; left: 34%; top: 6%; }
+  .praegung-zert { left: -6%; }
   .rz-pfeil { display: block; width: 5.5rem; height: auto; align-self: flex-end; margin-left: 0.5rem; }
 }
 
@@ -223,7 +243,7 @@ h1 { font-size: clamp(2.25rem, 5.6vw, 4.25rem); line-height: 1.06; letter-spacin
 .rz-stern { position: absolute; right: 0; top: 0; width: 2.75rem; height: auto; color: var(--leit); }
 .formate { display: grid; gap: 1.5rem; margin-top: clamp(1.5rem, 3vw, 2.25rem); }
 .format { display: flex; flex-direction: column; gap: 0.5rem; }
-.rahmen { border: 1px solid var(--linie); background: #fff; padding: 0.5rem; box-shadow: var(--schatten); }
+.rahmen { border: 1px solid var(--linie); background: var(--flaeche-weich); padding: 0.5rem; box-shadow: var(--schatten); }
 .rahmen img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
 .ki-hinweis { align-self: flex-start; font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.02em; color: var(--text); }
 .ki-hinweis::before { content: ""; display: inline-block; width: 0.5rem; height: 0.5rem; margin-right: 0.45rem; background: var(--akzent); border-radius: 50%; }
@@ -235,7 +255,7 @@ h1 { font-size: clamp(2.25rem, 5.6vw, 4.25rem); line-height: 1.06; letter-spacin
 
 .karten { display: grid; gap: 1rem; margin-top: clamp(1.75rem, 3.5vw, 2.5rem); }
 .karte {
-  background: #fff; border-top: 0.5rem solid var(--kenn);
+  background: var(--flaeche-weich); border-top: 0.5rem solid var(--kenn);
   padding: 1.5rem 1.5rem 1.25rem; display: flex; flex-direction: column; align-items: flex-start; gap: 0.75rem;
   box-shadow: var(--schatten); transition: transform 0.35s var(--lauf), box-shadow 0.35s var(--lauf);
 }
@@ -244,6 +264,10 @@ h1 { font-size: clamp(2.25rem, 5.6vw, 4.25rem); line-height: 1.06; letter-spacin
 .punkt { width: 0.875rem; height: 0.875rem; border-radius: 50%; background: var(--kenn); outline: 2px solid var(--dunkel); outline-offset: 1px; flex: none; }
 .karte-text { max-width: 52ch; }
 .karte .text-link { margin-top: auto; }
+.karte-bild { align-self: stretch; margin: -1.5rem -1.5rem 0.25rem; display: flex; flex-direction: column; gap: 0.45rem; }
+.karte-rahmen { aspect-ratio: 16 / 9; overflow: hidden; box-shadow: inset 0 -1px 0 rgb(16 32 44 / 0.12); }
+.karte-rahmen img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s var(--lauf); }
+.karte-bild .ki-hinweis { margin-left: 1.5rem; }
 .karte-lego { width: 100%; overflow: hidden; }
 .karte-lego img { width: 100%; height: auto; transition: transform 0.6s var(--lauf); }
 @media (min-width: 48rem) {
@@ -287,10 +311,12 @@ h1 { font-size: clamp(2.25rem, 5.6vw, 4.25rem); line-height: 1.06; letter-spacin
 .gross-zahl span { display: block; font-size: clamp(7rem, 20vw, 13rem); font-weight: 800; line-height: 0.9; letter-spacing: -0.04em; margin-bottom: 0.25rem; }
 .rz-welle { width: 9rem; height: auto; margin-block: 0.25rem 1rem; }
 .notizen { display: grid; gap: 1.25rem; justify-items: start; }
-.note { position: relative; align-self: start; color: var(--text); box-shadow: 0 1px 2px rgb(15 53 82 / 0.3), 0 6px 12px -4px rgb(15 53 82 / 0.38); transition: transform 0.35s var(--lauf), box-shadow 0.35s var(--lauf); }
+.note { position: relative; align-self: start; color: var(--text); box-shadow: var(--schatten-notiz); transition: transform 0.35s var(--lauf), box-shadow 0.35s var(--lauf); }
 /* Haftnotiz: Farbe auf der Notiz selbst, nie breiter als 480 px (§V3.3) */
 .note { background: var(--kenn); padding: 0 1.25rem 1rem; width: 100%; max-width: 480px; }
-.note::before { content: ""; position: absolute; z-index: 1; left: 50%; top: -0.55rem; width: 4.5rem; height: 1.1rem; margin-left: -2.25rem; background: rgb(237 243 246 / 0.6); }
+.note::before { content: ""; position: absolute; z-index: 1; left: 50%; top: -0.55rem; width: 4.5rem; height: 1.1rem; margin-left: -2.25rem; background: rgb(237 243 246 / 0.6); box-shadow: 0 1px 2px rgb(16 32 44 / 0.18); }
+/* Papier: zur Ecke unten rechts hin leicht dunkler (Schatten stärker, siehe --schatten-notiz) */
+.note::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(150deg, transparent 55%, rgb(15 53 82 / 0.1) 100%); }
 .note h3 { padding: 1.4rem 0 0.5rem; font-size: 1.1875rem; }
 .note ul { list-style: none; padding: 0.25rem 0; }
 .note li { padding: 0.3rem 0; font-size: 1rem; line-height: 1.4; border-top: 1px solid rgb(16 32 44 / 0.25); }
@@ -347,13 +373,14 @@ h1 { font-size: clamp(2.25rem, 5.6vw, 4.25rem); line-height: 1.06; letter-spacin
 .shop-raster { display: grid; gap: 1.5rem; }
 .shop-raster article { display: grid; gap: 0.5rem; align-content: start; }
 .shop-raster p { max-width: 36ch; }
-.shop-art { aspect-ratio: 3 / 2; display: grid; place-items: center; margin-bottom: 0.5rem; }
+.shop-art { aspect-ratio: 3 / 2; display: grid; place-items: center; margin-bottom: 0.5rem; overflow: hidden; box-shadow: var(--schatten); }
 .shop-art span { font-family: var(--schrift-kopf); font-weight: 700; color: #fff; }
 .shop-ireb { background: var(--dunkel); }
 .shop-ireb span { font-size: 2.5rem; letter-spacing: 0.08em; }
-.shop-landschaft { background: var(--leit); border: 2px dashed var(--grund); outline: 1px solid var(--leit); font-size: 1.125rem; }
-.shop-landschaft span { font-size: 1.125rem; font-weight: 600; }
-.shop-vorlagen { background: #fff; border: 1px solid var(--linie); align-content: center; gap: 0.6rem; padding-inline: 18%; }
+/* gezeichnete Fläche (Höhenlinien), bis Dons Fotos kommen */
+.shop-landschaft { background: var(--leit); background-image: linear-gradient(160deg, var(--leit) 0%, var(--dunkel) 100%); color: var(--grund); }
+.shop-landschaft svg { display: block; width: 100%; height: 100%; }
+.shop-vorlagen { background: var(--flaeche-weich); border: 1px solid var(--linie); align-content: center; gap: 0.6rem; padding-inline: 18%; }
 .shop-vorlagen span { display: block; height: 0.5rem; width: 100%; background: var(--leit); }
 .shop-vorlagen span:nth-child(2) { width: 70%; justify-self: start; background: var(--blau); }
 .shop-vorlagen span:nth-child(3) { width: 45%; justify-self: start; background: var(--mint); }
@@ -374,8 +401,8 @@ h1 { font-size: clamp(2.25rem, 5.6vw, 4.25rem); line-height: 1.06; letter-spacin
 /* Fuß */
 .fuss { border-top: 1px solid var(--linie-hell); padding-block: 2rem 4.5rem; }
 .fuss-innen { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 2rem; }
-.fuss-logo { display: inline-flex; align-items: center; min-height: 2.75rem; background: var(--grund); padding: 0.4rem 0.6rem; border-radius: 0.25rem; }
-.fuss-logo img { height: 3.25rem; width: auto; }
+.fuss-logo { display: inline-flex; align-items: center; min-height: 2.75rem; border-radius: 0.25rem; }
+.fuss-logo img { height: 6.5rem; width: auto; pointer-events: none; }
 .fuss-copy { margin-right: auto; font-size: 1rem; }
 .fuss-links { display: flex; gap: 0.5rem 1.5rem; flex-wrap: wrap; }
 .fuss-links a { display: inline-flex; align-items: center; min-height: 2.75rem; padding-block: 0.3rem; }
@@ -395,7 +422,7 @@ h1 { font-size: clamp(2.25rem, 5.6vw, 4.25rem); line-height: 1.06; letter-spacin
 
 .sprung { padding-block: clamp(2.5rem, 5vw, 4rem); }
 .sprung ol { list-style: none; padding: 0; display: grid; gap: 0.875rem; }
-.sprung li { background: #fff; border-top: 0.5rem solid var(--kenn); box-shadow: var(--schatten); transition: transform 0.35s var(--lauf), box-shadow 0.35s var(--lauf); }
+.sprung li { background: var(--flaeche-weich); border-top: 0.5rem solid var(--kenn); box-shadow: var(--schatten); transition: transform 0.35s var(--lauf), box-shadow 0.35s var(--lauf); }
 .sprung a {
   display: grid; grid-template-columns: 2.25rem 1fr; column-gap: 0.75rem; row-gap: 0.15rem; align-items: start; align-content: start;
   height: 100%; min-height: 3.5rem; padding: 0.9rem 1rem; text-decoration: none; color: var(--text);
@@ -445,15 +472,15 @@ h1 { font-size: clamp(2.25rem, 5.6vw, 4.25rem); line-height: 1.06; letter-spacin
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .karte:hover, .sprung li:hover { transform: translateY(-4px); box-shadow: var(--schatten-hoch); }
   .note:hover { transform: translateY(-6px); }
-  .karte:hover .karte-lego img { transform: scale(1.04); }
+  .karte:hover .karte-lego img, .karte:hover .karte-rahmen img { transform: scale(1.04); }
 }
 @media (prefers-reduced-motion: no-preference) {
   .karte:focus-within, .sprung li:focus-within { transform: translateY(-4px); box-shadow: var(--schatten-hoch); }
   .note:focus-within { transform: translateY(-6px); }
-  .karte:focus-within .karte-lego img { transform: scale(1.04); }
+  .karte:focus-within .karte-lego img, .karte:focus-within .karte-rahmen img { transform: scale(1.04); }
 }
-.note:focus-within { box-shadow: 0 2px 4px rgb(15 53 82 / 0.3), 0 16px 26px -6px rgb(15 53 82 / 0.5); }
-@media (hover: hover) { .note:hover { box-shadow: 0 2px 4px rgb(15 53 82 / 0.3), 0 16px 26px -6px rgb(15 53 82 / 0.5); } }
+.note:focus-within { box-shadow: var(--schatten-notiz-hoch); }
+@media (hover: hover) { .note:hover { box-shadow: var(--schatten-notiz-hoch); } }
 
 /* Marker-Strich unter den Abschnittsüberschriften: gleiches Motiv wie im h1, zeichnet einmal beim Erscheinen */
 h2[data-marker]::after {
